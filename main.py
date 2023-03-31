@@ -405,7 +405,7 @@ def runProgram(Timer):
     updateStatus()
         
 
-    #If getControls timer not armed -> arm. Set timer also when out of connection to check periodically if connection is established
+    #If getControls timer not armed -> arm. Set timer also when out of connection to try periodically if connection becomes established
     if not getControlsTimerArmed:
         #Set new random interval for timer: 90 sec + random 0-30 sec
         requestInterval = random.randrange(30) + 90
@@ -451,8 +451,8 @@ def syncClock(t,diff):
     except:
         rtcSynced = False
     
-    # Add diff to boot timestamp at first sync
-    if not bootTimestampSynced:
+    # Add diff to boot timestamp after first succesfull sync
+    if rtcSynced and not bootTimestampSynced:
         print("Boot timestamp: {}, diff: {}, ".format(bootTimestamp,diff),end="")
         bootTimestamp = bootTimestamp + diff
         print("new timestamp: {}".format(bootTimestamp))
