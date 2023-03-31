@@ -1,30 +1,12 @@
 ###########################################################################
-# 
-# File:            main.py
 #
-# License:
-#
-# Author:          Tuomas Kiviluoto (tuomas@kiviluoto.fi)
-#
-# Version:         1.0-rc2
-#
-# Date:            30.3.2023
-#
-# Description:     Pörssäri Micropython client for RP2040 and ESP-devices
+# Description:     Pörssäri Micropython client for Raspberry Pico W
 #                  
 # Requirements:    Tested with Pico W Micropython v1.19.1-994-ga4672149b
 #
 # Known issues:    Web server gets stuck when losing wifi connection
 #
-# Version history: ** 29.3.2023 1.0-rc1 **
-#                  First public version.
-#
-#                  ** 30.3.2023 1.0-rc2 **
-#                  Minor fixes.
-#
-#
-#
-###########################################################################
+############################################################################
 
 VERSION = "Micropython-1.0-rc2"
 
