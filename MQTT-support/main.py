@@ -375,7 +375,7 @@ def doControls(timerInitiated):
             try:
                 client = mqttConnect()
             except:
-                print('Could not establish mqtt connection')
+                print('           Could not establish mqtt connection')
             
         i = 0
         relay = []
@@ -383,31 +383,32 @@ def doControls(timerInitiated):
             try:
                 result = controlsJson['Channel{}'.format(i + 1)]['{!s}'.format(hour)]
                 relay.append('relay{}'.format(i + 1))
-                print("           Channel {},".format(i + 1), "hour {}: {}".format(hour,result))
                 channelMode = globals()['channel{}_mode'.format(i + 1)]
-                print(channelMode)
+                print("           Channel {},".format(i + 1), "mode: {},".format(channelMode), "hour {}: {}".format(hour,result))
                 if result == '1':
                     if channelMode == 'GPIO':
                         control = "{}.on()".format(relay[i])
                         exec(control)
+                        print('           --> Relay ON')
                     elif channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
                         if client:
                             client.publish(topic, msg='ON')
-                            print('Published ON to topic {}'.format(topic))
+                            print('           --> Published ON to topic {}'.format(topic))
                         else:
-                            print('Could not publish to topic {}'.format(topic))
+                            print('           --> Could not publish to topic {}'.format(topic))
                 else:
                     if channelMode == 'GPIO':
                         control = "{}.off()".format(relay[i])
                         exec(control)
+                        print('           --> Relay OFF')
                     elif channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
                         if client:
                             client.publish(topic, msg='OFF')
-                            print('Published OFF to topic {}'.format(topic))
+                            print('           --> Published OFF to topic {}'.format(topic))
                         else:
-                            print('Could not publish to topic {}'.format(topic))
+                            print('           --> Could not publish to topic {}'.format(topic))
                 i += 1
             except:
                 print("Could not control channel {}".format(i + 1))
@@ -535,7 +536,7 @@ def syncClock(t,diff):
 bootTimestamp = mktime(localtime())
 
 # Start program loop timer
-programTimer.init(mode=Timer.PERIODIC, period = 5 * 1000, callback=runProgram)
+programTimer.init(mode=Timer.PERIODIC, period = 15 * 1000, callback=runProgram)
 
 # HTTP-server for info and managing settings, known bug, needs to be rewritten into function to reset socket state when wifi changes
 if connectionmanager.wlan_sta:
