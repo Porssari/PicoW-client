@@ -370,6 +370,7 @@ def doControls(timerInitiated):
         channels = int(controlsJson['Metadata']['Channels'])
         
         # If mqtt in use, open connection (experimental)
+        client = False
         if mqtt_control:
             try:
                 client = mqttConnect()
@@ -391,10 +392,10 @@ def doControls(timerInitiated):
                         exec(control)
                     elif channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
-                        try:
+                        if client:
                             client.publish(topic, msg='ON')
                             print('Published ON to topic {}'.format(topic))
-                        except:
+                        else:
                             print('Could not publish to topic {}'.format(topic))
                 else:
                     if channelMode == 'GPIO':
@@ -402,20 +403,20 @@ def doControls(timerInitiated):
                         exec(control)
                     elif channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
-                        try:
+                        if client:
                             client.publish(topic, msg='OFF')
                             print('Published OFF to topic {}'.format(topic))
-                        except:
+                        else:
                             print('Could not publish to topic {}'.format(topic))
                 i += 1
             except:
                 print("Could not control channel {}".format(i + 1))
                 i += 1
             controlError = 0
-        try:
+            
+        if client:
             client.disconnect()
-        except:
-            print('No mqtt connection')
+
             
         return True
         
