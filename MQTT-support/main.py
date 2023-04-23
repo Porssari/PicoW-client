@@ -45,11 +45,11 @@ from umqttsimple import MQTTClient
 # Define variables
 # MQTT server (experimental)
 mqtt_control = True
-mqtt_server = '192.168.1.91'
+mqtt_server = 'test.mosquitto.org'
 client_id = 'PicoW'
-user_t = 'pico'
-password_t = 'picopassword'
-channel1_topic = 'hello'
+user_t = 'rw'
+password_t = 'readwrite'
+channel1_topic = '#'
 channel2_topic = 'hello'
 channel3_topic = 'hello'
 channel4_topic = 'hello'
@@ -62,12 +62,12 @@ channel8_topic = 'hello'
 # GPIO or MQTT
 channel1_mode = 'MQTT'
 channel2_mode = 'GPIO'
-channel3_mode = 'MQTT'
-channel4_mode = 'MQTT'
-channel5_mode = 'MQTT'
-channel6_mode = 'MQTT'
-channel7_mode = 'MQTT'
-channel8_mode = 'MQTT'
+channel3_mode = 'GPIO'
+channel4_mode = 'GPIO'
+channel5_mode = 'GPIO'
+channel6_mode = 'GPIO'
+channel7_mode = 'GPIO'
+channel8_mode = 'GPIO'
 
 
 # Real time clock
@@ -180,7 +180,7 @@ controlsJson = {}
 def mqttConnect():
     client = MQTTClient(client_id, mqtt_server, user=user_t, password=password_t, keepalive=10)
     client.connect()
-    print('Connected to %s MQTT Broker'%(mqtt_server))
+    print('           Connected to %s MQTT Broker'%(mqtt_server))
     return client
 
     
@@ -386,11 +386,12 @@ def doControls(timerInitiated):
                 channelMode = globals()['channel{}_mode'.format(i + 1)]
                 print("           Channel {},".format(i + 1), "mode: {},".format(channelMode), "hour {}: {}".format(hour,result))
                 if result == '1':
+                    #if channelMode == 'GPIO':
+                    control = "{}.on()".format(relay[i])
+                    exec(control)
                     if channelMode == 'GPIO':
-                        control = "{}.on()".format(relay[i])
-                        exec(control)
                         print('           --> Relay ON')
-                    elif channelMode == 'MQTT':
+                    if channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
                         if client:
                             client.publish(topic, msg='ON')
@@ -398,11 +399,12 @@ def doControls(timerInitiated):
                         else:
                             print('           --> Could not publish to topic {}'.format(topic))
                 else:
+                    #if channelMode == 'GPIO':
+                    control = "{}.off()".format(relay[i])
+                    exec(control)
                     if channelMode == 'GPIO':
-                        control = "{}.off()".format(relay[i])
-                        exec(control)
                         print('           --> Relay OFF')
-                    elif channelMode == 'MQTT':
+                    if channelMode == 'MQTT':
                         topic = globals()['channel{}_topic'.format(i + 1)]
                         if client:
                             client.publish(topic, msg='OFF')
