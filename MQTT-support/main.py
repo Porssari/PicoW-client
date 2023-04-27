@@ -8,7 +8,7 @@
 #
 ############################################################################
 
-VERSION = "Micropython-1.0-rc2"
+VERSION = "Micropython-1.0-rc2-mqtt"
 
 # Import network modules
 try:
