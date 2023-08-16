@@ -1,0 +1,10 @@
+{
+    "Known_networks": [
+        {"SSID": "MyWifiWithPassword", "PASS": "Password123" },
+        {"SSID": "MyWifiWithoutPassword"}
+    ],
+    "Fetch_url_fallback": "https://api.porssari.fi/getcontrols.php",
+    "Mac_fallback": "MyCustomMacAddress",
+    "Channels": 8,
+    "Failsafe": "false"
+}     

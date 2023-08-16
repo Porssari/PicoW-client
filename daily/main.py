@@ -35,6 +35,7 @@ from time import sleep, mktime, localtime
 
 # Import pin-control
 from machine import Pin, Timer
+from neopixel import NeoPixel
 
 # Import carbage collector
 import gc
@@ -50,6 +51,11 @@ requestTimer = Timer()
 
 # Onboard led
 onboard = Pin("LED", Pin.OUT, value=0)
+
+# Neopixel RGB (red light while initial setup)
+np = NeoPixel(machine.Pin(13), 1)
+np[0] = (255, 0, 0)
+np.write()
 
 # Relay pins
 relay1 = Pin(21, Pin.OUT)
@@ -145,6 +151,9 @@ bootTimestampSynced = False
 
 # Empty list for webserver until first request is succeeded
 controlsJson = {}
+
+class Channel:
+    
 
     
 def updateStatus():
@@ -276,6 +285,11 @@ def getControls():
             print("[{:02d}:{:02d}:{:02d}]".format(time[4],time[5],time[6]),end=" ")
             print('Channels to control: {}'.format(deviceChannels))
             updateStatus()
+            
+            # Set RGB to blue if there's a succesfull request
+            np[0] = (0, 0, 255)
+            np.write()
+            
             doControls(False)
             
         elif resp.status_code == 400:
@@ -365,13 +379,20 @@ def doControls(timerInitiated):
                         control = "{}.on()".format(item)
                         exec(control)
                         print("           Failsafe-mode: {} on".format(item))
-                    
+                
+                # Set RGB to cyan
+                np[0] = (0, 255, 255)
+                np.write()
+                
                 return True
 
             except:
                 print("           Error while reading JSON-file")
             
         else:
+            # Set RGB to white
+            np[0] = (0, 0, 0)
+            np.write()
             channels = int(controlsJson['Metadata']['Channels'])
             i = 0
             while i < channels:
