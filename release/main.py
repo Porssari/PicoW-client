@@ -151,10 +151,6 @@ bootTimestampSynced = False
 
 # Empty list for webserver until first request is succeeded
 controlsJson = {}
-
-class Channel:
-    
-
     
 def updateStatus():
     global doControlsTimerArmed,hoursLeftOnJson,controlsJson,wifi
